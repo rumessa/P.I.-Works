@@ -24,25 +24,39 @@ def deletePrimeNumbers(matrix, matrixSize):
             if primeNumber(matrix[row][col]) == 1:
                 matrix[row][col] = 0
 
-# adding trailing zeroes
-def addZeroes(matrix, matrixSize):
-    zeroAmount = matrixSize - 1
-    for subList in matrix:
-        count = 0
-        while count < zeroAmount:
-            subList.append(0)
-            count += 1
-        zeroAmount -=  1
-
 # calculate the maximum path of the matrix
-# looking at the second last row we check for each number the diagonal and down. whichever is bigger we add it to the number.
-# we do the same for all as we go up
 def calculateSum(matrix, matrixSize):
-    for row in range(matrixSize-2, -1, -1):
-        for col in range(0, row+1):
-            deletePrimeNumbers(matrix, matrixSize)
-            matrix[row][col] += max(matrix[row + 1][col], matrix[row + 1][col + 1])
-    return matrix[row][col]
+    # make all primary numbers in our matrix zero
+    deletePrimeNumbers(matrix, matrixSize)
+
+    # add row 0 to both numbers in row 1 as row 0 only has 1 number. 
+    matrix[1][0] += matrix[0][0]
+    matrix[1][1] += matrix[0][0]
+
+    # since row 0 and row 1 already walked over, we now start from row 2
+    for row in range(2, matrixSize):
+        # add the first element of row - 1 to first element of current row (down) 
+        # and add the last element of row - 1 to last element of current row (diagonal)
+        matrix[row][0] += matrix[row - 1][0]
+        matrix[row][row] += matrix[row - 1][row - 1]
+        
+        # for all the elements in the middle of row (excluding first and last element) 
+        # that can be accessed by both sides of the upper level row elements
+        for col in range(1, row):
+            down = matrix[row][col] + matrix[row - 1][col]        # check down from row - 1 
+            diag = matrix[row][col] + matrix[row - 1][col - 1]    # check diagonal from row -1 
+            
+            matrix[row][col] = max(down, diag)                    # whichever one results greater sum gets substituted into the position
+            
+            print(matrix)
+    
+    # final sum will be in the last row of matrix
+    sum = 0
+    for col in range(0, matrixSize):
+        if matrix[matrixSize - 1][col] > sum:
+            sum = matrix[matrixSize - 1][col]
+    return sum
+
             
 def main(filename):
     # read the triangle from file and put into a list
@@ -60,7 +74,6 @@ def main(filename):
 
         matrixSize = len(matrix)
 
-        addZeroes(matrix, matrixSize)    # add zeroes to make proper m x m matrix
         sum = calculateSum(matrix, matrixSize)
         print("The sum is: {0}".format(sum))
     
