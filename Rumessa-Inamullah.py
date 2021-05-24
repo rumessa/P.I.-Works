@@ -47,9 +47,7 @@ def calculateSum(matrix, matrixSize):
             diag = matrix[row][col] + matrix[row - 1][col - 1]    # check diagonal from row -1 
             
             matrix[row][col] = max(down, diag)                    # whichever one results greater sum gets substituted into the position
-            
-            print(matrix)
-    
+                
     # final sum will be in the last row of matrix
     sum = 0
     for col in range(0, matrixSize):
@@ -57,7 +55,6 @@ def calculateSum(matrix, matrixSize):
             sum = matrix[matrixSize - 1][col]
     return sum
 
-            
 def main(filename):
     # read the triangle from file and put into a list
     with open(os.path.join(sys.path[0],filename), "r") as myFile:
