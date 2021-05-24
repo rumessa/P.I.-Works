@@ -1,6 +1,7 @@
 # P.I.-Works
 
 Internship assignment for P.I. Works.
+Using Python 3.9.5
 
 
 1. You will start from the top and move downwards to an adjacent number as in below.
